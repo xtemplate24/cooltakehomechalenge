@@ -11,6 +11,11 @@ on:
         description: Folder containing the Dockerfile
         type: string
         required: true
+      manifest:
+        description: Kubernetes manifest whose image digest is updated after a push (optional)
+        type: string
+        required: false
+        default: ""
     outputs:
       digest:
         description: Digest of the pushed image
@@ -74,3 +79,50 @@ jobs:
 
       - name: Show pushed digest
         run: echo "Pushed ${IMAGE}@${{ steps.push.outputs.digest }}"
+
+  update-manifest:
+    needs: build
+    if: inputs.manifest != '' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    concurrency:
+      group: update-manifest
+      cancel-in-progress: false
+    steps:
+      - name: Checkout latest main
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: main
+
+      - name: Write new digest into the manifest and commit
+        env:
+          NAME: ${{ inputs.name }}
+          MANIFEST: ${{ inputs.manifest }}
+          DIGEST: ${{ needs.build.outputs.digest }}
+        run: |
+          set -euo pipefail
+
+          # Only accept a well-formed digest
+          if ! [[ "$DIGEST" =~ ^sha256:[0-9a-f]{64}$ ]]; then
+            echo "Unexpected digest format: $DIGEST" >&2
+            exit 1
+          fi
+
+          IMAGE="ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/${NAME}"
+          sed -i -E "s#^( *image: )${IMAGE}(@sha256:[0-9a-f]{64})?\$#\1${IMAGE}@${DIGEST}#" "$MANIFEST"
+
+          # Fail loudly if the image line was not found or not updated
+          grep -q "${IMAGE}@${DIGEST}" "$MANIFEST"
+
+          if git diff --quiet; then
+            echo "Manifest already up to date"
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$MANIFEST"
+          git commit -m "deploy: ${NAME} ${DIGEST} (from ${GITHUB_SHA::7})"
+          git pull --rebase origin main
+          git push origin HEAD:main

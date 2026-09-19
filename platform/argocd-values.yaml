@@ -3,3 +3,7 @@ dex:
   enabled: false
 notifications:
   enabled: false
+
+configs:
+  cm:
+    timeout.reconciliation: 30s

@@ -15,9 +15,10 @@ permissions:
 jobs:
   image:
     permissions:
-      contents: read
+      contents: write
       packages: write
     uses: ./.github/workflows/build-image.yaml
     with:
       name: hello-nginx
       context: apps/hello-nginx
+      manifest: k8s/deployment.yaml
