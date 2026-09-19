@@ -13,6 +13,8 @@ spec:
       labels:
         app: second-page-app-deployment
     spec:
+      imagePullSecrets:
+        - name: ghcr-pull
       automountServiceAccountToken: false
       securityContext:
         runAsNonRoot: true
@@ -22,7 +24,7 @@ spec:
       containers:
         - name: nginx
           image: ghcr.io/xtemplate24/second-page@sha256:9d6f7908f9ed18850620bf3686d70e902fe938070e2c40ddefb3b9b439b55a76
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - name: http
               containerPort: 8080
