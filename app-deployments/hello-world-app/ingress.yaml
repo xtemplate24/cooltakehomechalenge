@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hello-nginx
+  namespace: hello-web
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: hello.localhost
+      http:
+        paths:
+          - backend:
+              service:
+                name: hello-nginx
+                port:
+                  name: http
+            path: /
+            pathType: Prefix
