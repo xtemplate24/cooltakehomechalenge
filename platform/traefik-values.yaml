@@ -1,0 +1,21 @@
+# Traefik on kind: bind to the node's ports 80/443 (forwarded to the host by kind)
+deployment:
+  kind: Deployment
+  replicas: 1
+service:
+  type: ClusterIP
+ports:
+  web:
+    hostPort: 80
+  websecure:
+    hostPort: 443
+providers:
+  kubernetesIngress:
+    publishedService:
+      enabled: false
+nodeSelector:
+  ingress-ready: "true"
+tolerations:
+  - key: node-role.kubernetes.io/control-plane
+    operator: Exists
+    effect: NoSchedule
