@@ -15,8 +15,7 @@ spec:
     spec:
       automountServiceAccountToken: false
       containers:
-        - image: >-
-            ghcr.io/xtemplate24/hello-nginx@sha256:e5980e8ba616ce113166663fea53d78425db87a5f3d3a96313fc55d63bca4a38
+        - image: ghcr.io/xtemplate24/hello-nginx@sha256:e5980e8ba616ce113166663fea53d78425db87a5f3d3a96313fc55d63bca4a38
           imagePullPolicy: IfNotPresent
           livenessProbe:
             httpGet:
