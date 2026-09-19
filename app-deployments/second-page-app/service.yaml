@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: hello-nginx
-  namespace: hello-web
+  name: second-page-app-svc
+  namespace: second-page-app
 spec:
   selector:
-    app: hello-nginx
+    app: second-page-app-deployment
   ports:
     - name: http
       port: 80

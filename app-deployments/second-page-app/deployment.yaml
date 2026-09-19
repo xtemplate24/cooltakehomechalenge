@@ -1,17 +1,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: hello-nginx
-  namespace: hello-web
+  name: second-page-app-deployment
+  namespace: second-page-app
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: hello-nginx
+      app: second-page-app-deployment
   template:
     metadata:
       labels:
-        app: hello-nginx
+        app: second-page-app-deployment
     spec:
       automountServiceAccountToken: false
       securityContext:
@@ -21,7 +21,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: nginx
-          image: ghcr.io/xtemplate24/hello-nginx@sha256:3e29a7239ccd8037224d9bcd8433aab85564560733b6aae657b7010be01c44c1
+          image: ghcr.io/xtemplate24/second-page-app-deployment@sha256:3e29a7239ccd8037224d9bcd8433aab85564560733b6aae657b7010be01c44c1
           imagePullPolicy: IfNotPresent
           ports:
             - name: http

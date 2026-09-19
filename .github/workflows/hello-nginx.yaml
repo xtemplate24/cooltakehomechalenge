@@ -21,4 +21,4 @@ jobs:
     with:
       name: hello-nginx
       context: apps/hello-nginx
-      manifest: k8s/deployment.yaml
+      manifest: app-deployments/hello-world-app/deployment.yaml
