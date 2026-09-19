@@ -1,0 +1,5 @@
+# Trim what a small local cluster does not need
+dex:
+  enabled: false
+notifications:
+  enabled: false
