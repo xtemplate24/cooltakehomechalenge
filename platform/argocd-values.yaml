@@ -6,4 +6,4 @@ notifications:
 
 configs:
   cm:
-    timeout.reconciliation: 30s
+    timeout.reconciliation: 10s
