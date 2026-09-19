@@ -15,13 +15,13 @@ spec:
     spec:
       automountServiceAccountToken: false
       containers:
-        - image: ghcr.io/xtemplate24/hello-nginx@sha256:e5980e8ba616ce113166663fea53d78425db87a5f3d3a96313fc55d63bca4a38
+        - name: nginx
+          image: ghcr.io/xtemplate24/hello-nginx@sha256:e5980e8ba616ce113166663fea53d78425db87a5f3d3a96313fc55d63bca4a38
           imagePullPolicy: IfNotPresent
           livenessProbe:
             httpGet:
               path: /
               port: http
-          name: nginx
           ports:
             - containerPort: 8080
               name: http
