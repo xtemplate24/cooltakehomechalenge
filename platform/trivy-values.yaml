@@ -1,6 +1,8 @@
 # Rescan each workload's image once a day
 operator:
   scannerReportTTL: "24h"
+  concurrentScanJobsLimit: 5
+  deleteScanJob: "true"
 
 # Match the pipeline gate: only report serious findings that have a fix
 trivy:
