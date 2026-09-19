@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-nginx
+  namespace: hello-web
+spec:
+  selector:
+    app: hello-nginx
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
