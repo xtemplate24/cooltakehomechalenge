@@ -33,7 +33,7 @@ flowchart LR
 4. **Vulnerability scanning runs on a schedule inside the cluster** — Trivy-operator doing the heavy lifting, only a simple webhoot to ntfy for notifications and they really spam a lot since no control on what get's sent. 
 5. **Nobody reaches the page without authenticating.** An anonymous visitor holding the URL should not see the hello world page.
 
-## 3. Security expectations (section 3 of the brief)
+## 3. Security expectations 
 
 ### Pipeline credentials
 - **Registry:** the workflow logs in to GHCR with the built-in `GITHUB_TOKEN`. It is short-lived, created per run, and limited to that job (`packages: write`). No stored registry secret. 
