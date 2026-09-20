@@ -66,8 +66,7 @@ flowchart LR
 
 ### Least privilege
 - **In the cluster (built):** namespaces enforce the `restricted` Pod Security level; all capabilities dropped; no privilege escalation; seccomp `RuntimeDefault`; service account token not mounted; resource limits set.
-- **Gaps to name:** no NetworkPolicies yet, and Argo CD and Trivy Operator hold broad cluster permissions by design. **TODO:** check and state what they actually have.
-- **In Azure (designed):** kubelet or workload identity with `AcrPull` scoped to one registry, no ACR admin user, Entra-integrated AKS RBAC by group, workload identity instead of stored credentials.
+- **Future improvements:** Maybe implement network policies
 
 ## 5. Evidence it works
 
