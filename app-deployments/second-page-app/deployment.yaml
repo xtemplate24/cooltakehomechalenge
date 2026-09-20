@@ -23,7 +23,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: nginx
-          image: ghcr.io/xtemplate24/second-page@sha256:9d6f7908f9ed18850620bf3686d70e902fe938070e2c40ddefb3b9b439b55a76
+          image: ghcr.io/xtemplate24/second-page@sha256:744b71bb0290447d0b59e71ea2950465e85a9141bec5e90e933556d601a6037f
           imagePullPolicy: Always
           ports:
             - name: http
