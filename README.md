@@ -35,8 +35,6 @@ flowchart LR
 
 ## 3. Security expectations (section 3 of the brief)
 
-**Areas I chose to go deep on:** **TODO:** pick 3 to 4, for example *pipeline credentials, image hygiene, scan coverage, acting on scan results*. I cover the rest more briefly.
-
 ### Pipeline credentials
 - **Registry:** the workflow logs in to GHCR with the built-in `GITHUB_TOKEN`. It is short-lived, created per run, and limited to that job (`packages: write`). No stored registry secret. 
 - **Cluster:** got a bit lazy but the repo is public, so argoCD does not have to authenticate with it to check the repo state. Plan to add maybe ssh authentication in the future. 
@@ -52,7 +50,7 @@ flowchart LR
 - **Future improvements:** Add some kinda filter to parse the generated report and send a clean json via webhook.
 
 ### The finding I can't fix
-1. TO EDIT
+1. For runtime scans if a critical vulnerability is picked up by trivy during the daily scan, I think the best course of action would be to scale down the deployment, until a clean base-image can be found and rebuilt, passing through the scans again.
 
 ### Image hygiene
 - **Base image:** `nginxinc/nginx-unprivileged:stable-alpine`, pinned by digest. It is small (Alpine) and built to run without root.
@@ -73,33 +71,14 @@ flowchart LR
 
 ## 5. Evidence it works
 
-**TODO:** add screenshots or a recording link.
-- [ ] Pipeline run showing the Trivy gate passing (and ideally one failing)
-- [ ] Argo CD showing the app Synced/Healthy
-- [ ] Anonymous request being redirected to GitHub login
-- [ ] Non-member getting rejected, and a team member getting in
-- [ ] `kubectl get vulnerabilityreports -A -o wide` output
-- [ ] The ntfy notification arriving
+1. It works... you can view the alerts here https://ntfy.sh/trivy-alerts-91f5d6f881b3
+2. Screenshots as attached https://we.tl/t-dtH7j1BPEyLNhLoN
 
 ## 6. Known limitations
 
 - The ntfy topic name acts as a password. It is kept out of Git, but it sits in plain text in the Helm release and the operator's pod spec.
 - The alert webhook is unfiltered and noisy.
-- Existing login sessions stay valid after the access rule changes, until the cookie expires.
-- `second-page` is served over plain HTTP with no authentication. **TODO:** fix it or explain why.
-- Self-signed certificate (Traefik default), which is fine for a demo.
-- Findings in third-party components (for example Argo CD, kindnet) are reported but not fixed, as the brief says.
+- Self-signed certificate (Traefik default), plan to use actual cert in the future.
+- No fixes done for found CVEs
+- Currently repo is accessible by all, to limit in the future
 
-## 7. What I'd do differently in production
-
-- **AKS** provisioned with Terraform: private cluster, Entra-integrated RBAC, workload identity, ACR with private endpoint.
-- **Login with Entra ID** groups instead of a GitHub team.
-- **Secrets from Azure Key Vault** (CSI driver or External Secrets), not hand-made Secrets.
-- **Authenticated alert channel** (Teams, PagerDuty, ticketing) and filtered alerts.
-- **Admission control** (Kyverno or Azure Policy) and signed images (cosign) so unscanned or unsigned images cannot run.
-- **NetworkPolicies**, branch protection, and scheduled base-image rebuilds.
-- **Real certificates and DNS**.
-
-## 8. Time spent and what's next
-
-**TODO:** roughly how many hours, what blocked you, and what you would do next with more time.
