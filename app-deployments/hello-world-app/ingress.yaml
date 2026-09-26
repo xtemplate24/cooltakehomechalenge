@@ -9,7 +9,7 @@ metadata:
     traefik.ingress.kubernetes.io/router.middlewares: >-
       auth-oauth2-proxy-errors@kubernetescrd,
       auth-oauth2-proxy-auth@kubernetescrd,
-      hello-web-strip-hello@kubernetescrd
+      hello-web-strip-hello-web@kubernetescrd
 spec:
   ingressClassName: traefik
   tls:
