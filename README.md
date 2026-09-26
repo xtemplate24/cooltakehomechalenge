@@ -62,7 +62,7 @@ flowchart LR
 |---|---|---|---|
 | Build-time image scan (Trivy in CI) | Built | Known CVEs before an image is pushed | Anything disclosed later |
 | Runtime scan (Trivy Operator) | Built | CVEs published after deploy; third-party images I did not build | Misconfiguration in code before it is applied |
-| Infrastructure-code scan (Trivy config, Checkov, or similar on manifests and Terraform) | **Skipped**, discussion only | Risky settings in YAML/Terraform before apply | Vulnerabilities inside images |
+| Infrastructure-code scan (Trivy config, Checkov, or similar on manifests and Terraform) | Risky settings in YAML/Terraform before apply | Vulnerabilities inside images |
 
 ### Least privilege
 - **In the cluster (built):** namespaces enforce the `restricted` Pod Security level; all capabilities dropped; no privilege escalation; seccomp `RuntimeDefault`; service account token not mounted; resource limits set.
