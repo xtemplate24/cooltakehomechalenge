@@ -11,6 +11,7 @@ ports:
     hostPort: 443
 providers:
   kubernetesIngress:
+    allowExternalNameServices: true
     publishedService:
       enabled: false
 nodeSelector:
