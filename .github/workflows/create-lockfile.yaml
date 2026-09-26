@@ -1,4 +1,4 @@
-name: create-lockfile
+name: create-lockfile (do once for every new app)
 
 on:
   workflow_dispatch:
