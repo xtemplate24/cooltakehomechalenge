@@ -1,0 +1,48 @@
+name: bootstrap-lockfile
+
+on:
+  workflow_dispatch:
+    inputs:
+      app_path:
+        description: "Path to the app folder, e.g. apps/landing or apps/app1/frontend"
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  generate:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout latest main
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: main
+
+      - name: Set up Node
+        uses: actions/setup-node@1a4442cacd436585916779262731d5b162bc6ec # v4
+        with:
+          node-version: 20
+
+      - name: Generate package-lock.json
+        working-directory: ${{ inputs.app_path }}
+        run: npm install
+
+      - name: Commit and push the lockfile
+        working-directory: ${{ inputs.app_path }}
+        run: |
+          set -euo pipefail
+
+          if git diff --quiet -- package-lock.json; then
+            echo "No changes to package-lock.json — nothing to commit"
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package-lock.json
+          git commit -m "chore: generate lockfile for ${{ inputs.app_path }}"
+          git pull --rebase origin main
+          git push origin HEAD:main
