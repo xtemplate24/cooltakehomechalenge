@@ -16,10 +16,17 @@ spec:
     - host: xtemplate.tail9d78f5.ts.net
       http:
         paths:
-          # Exact, not Prefix: matches only "/" so it can never
-          # silently swallow a path that's missing its own Ingress.
+          # 1. Matches ONLY the landing homepage root
           - path: /
             pathType: Exact
+            backend:
+              service:
+                name: landing-svc
+                port:
+                  name: http
+          # 2. Matches and allows Vite compiled bundles (JS, CSS, images)
+          - path: /assets
+            pathType: Prefix
             backend:
               service:
                 name: landing-svc
