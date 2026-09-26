@@ -10,9 +10,9 @@ spec:
   ingressClassName: traefik
   tls:
     - hosts:
-        - hello.localhost
+        - xtemplate.tail9d78f5.ts.net
   rules:
-    - host: hello.localhost
+    - host: xtemplate.tail9d78f5.ts.net
       http:
         paths:
           - path: /
