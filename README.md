@@ -1,6 +1,3 @@
-# Take-home assignment
-> I want to sincerely thank you for taking time out for the interviews, and sincerely apologize that I won't be pursuing this opportunity. That said, the repo is here with the lab (somewhat) completed. I thoroughly enjoyed the assignment and learnt a lot! Feel free to reference it as needed. 
-
 ## CICD structure
 
 ```mermaid
