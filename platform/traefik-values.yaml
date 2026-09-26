@@ -11,10 +11,11 @@ ports:
     hostPort: 443
 providers:
   kubernetesIngress:
-    allowCrossNamespace: true
     allowExternalNameServices: true
     publishedService:
       enabled: false
+  kubernetesCRD:
+    allowCrossNamespace: true
 nodeSelector:
   ingress-ready: "true"
 tolerations:
