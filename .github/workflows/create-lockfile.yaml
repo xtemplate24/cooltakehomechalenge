@@ -22,7 +22,7 @@ jobs:
           ref: main
 
       - name: Set up Node
-        uses: actions/setup-node@1a4442cacd436585916779262731d5b162bc6ec # v4
+        uses: actions/setup-node@1a4442cacd436585916779262731d5b162bc6ec7 # v4
         with:
           node-version: 20
 
