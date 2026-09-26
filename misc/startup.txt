@@ -1,0 +1,2 @@
+sudo tailscale funnel --bg https+insecure://localhost:443
+tailscale funnel status
