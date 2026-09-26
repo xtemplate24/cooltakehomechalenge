@@ -1,15 +1,15 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: hello-nginx
-  namespace: hello-web
+  name: app1-ingress
+  namespace: app1
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
     traefik.ingress.kubernetes.io/router.tls: "true"
     traefik.ingress.kubernetes.io/router.middlewares: >-
       auth-oauth2-proxy-errors@kubernetescrd,
       auth-oauth2-proxy-auth@kubernetescrd,
-      hello-web-strip-hello@kubernetescrd
+      app1-strip-app1@kubernetescrd
 spec:
   ingressClassName: traefik
   tls:
@@ -19,10 +19,10 @@ spec:
     - host: xtemplate.tail9d78f5.ts.net
       http:
         paths:
-          - path: /hello
+          - path: /app1
             pathType: Prefix
             backend:
               service:
-                name: hello-nginx
+                name: app1-frontend-svc
                 port:
                   name: http

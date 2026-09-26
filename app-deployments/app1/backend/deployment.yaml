@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app1-backend
+  namespace: app1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app1-backend
+  template:
+    metadata:
+      labels:
+        app: app1-backend
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 101
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: backend
+          # Swap image/port/probe path for whatever your API stack actually uses.
+          image: ghcr.io/xtemplate24/app1-backend
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+              name: api
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: api
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: api
+          resources:
+            requests: { cpu: 10m, memory: 32Mi }
+            limits: { cpu: 200m, memory: 128Mi }
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+            readOnlyRootFilesystem: true
+          volumeMounts:
+            - mountPath: /tmp
+              name: tmp
+      volumes:
+        - emptyDir: {}
+          name: tmp

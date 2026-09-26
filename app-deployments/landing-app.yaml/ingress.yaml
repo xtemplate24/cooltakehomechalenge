@@ -1,15 +1,12 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: hello-nginx
-  namespace: hello-web
+  name: landing-ingress
+  namespace: landing-app
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
     traefik.ingress.kubernetes.io/router.tls: "true"
-    traefik.ingress.kubernetes.io/router.middlewares: >-
-      auth-oauth2-proxy-errors@kubernetescrd,
-      auth-oauth2-proxy-auth@kubernetescrd,
-      hello-web-strip-hello@kubernetescrd
+    # Intentionally no router.middlewares here — this is the one open path.
 spec:
   ingressClassName: traefik
   tls:
@@ -19,10 +16,12 @@ spec:
     - host: xtemplate.tail9d78f5.ts.net
       http:
         paths:
-          - path: /hello
-            pathType: Prefix
+          # Exact, not Prefix: matches only "/" so it can never
+          # silently swallow a path that's missing its own Ingress.
+          - path: /
+            pathType: Exact
             backend:
               service:
-                name: hello-nginx
+                name: landing-svc
                 port:
                   name: http

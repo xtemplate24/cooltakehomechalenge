@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app1-frontend
+  namespace: app1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app1-frontend
+  template:
+    metadata:
+      labels:
+        app: app1-frontend
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 101
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: frontend
+          image: ghcr.io/xtemplate24/app1-frontend
+          imagePullPolicy: IfNotPresent
+          env:
+            # Server-side calls only — never sent to the browser.
+            - name: BACKEND_URL
+              value: "http://app1-backend-svc.app1.svc.cluster.local:8080"
+          ports:
+            - containerPort: 8080
+              name: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            requests: { cpu: 10m, memory: 16Mi }
+            limits: { cpu: 100m, memory: 64Mi }
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+            readOnlyRootFilesystem: true
+          volumeMounts:
+            - mountPath: /tmp
+              name: tmp
+      volumes:
+        - emptyDir: {}
+          name: tmp
