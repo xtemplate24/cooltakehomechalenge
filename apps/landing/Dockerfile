@@ -6,8 +6,19 @@ RUN npm ci
 COPY . .
 RUN npm run build
 
-# Serve stage — same pinned base as the other apps, unprivileged, no Node at runtime
-FROM nginxinc/nginx-unprivileged:stable-alpine@sha256:daa17b944bac2b578e962da4c61ad72a59233b3c63abea17113acaf4e6b9aea4
-COPY --chown=101:101 --from=build /app/dist /usr/share/nginx/html
+# Serve stage — uses the moving stable-alpine tracking tag to get latest updates
+FROM nginxinc/nginx-unprivileged:stable-alpine
+
+# Temporarily switch to root to perform security package upgrades
+USER root
+
+# Pull latest security patches to fix libexpat and resolve Trivy build blocks
+RUN apk update && apk upgrade libexpat
+
+# Revert immediately to the unprivileged application user
 USER 101
+
+# Copy the static web build artifacts into place
+COPY --chown=101:101 --from=build /app/dist /usr/share/nginx/html
+
 EXPOSE 8080
