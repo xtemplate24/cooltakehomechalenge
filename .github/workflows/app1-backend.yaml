@@ -1,4 +1,4 @@
-name: second-page
+name: app1-backend-build
 
 on:
   push:
@@ -19,7 +19,7 @@ jobs:
       packages: write
     uses: ./.github/workflows/build-image.yaml
     with:
-      name: second-page
-      context: apps/second-page
+      name: app1-backend-build
+      context: apps/app1/backend
       manifest: app-deployments/app1/backend/deployment.yaml
       
