@@ -1,0 +1,25 @@
+name: second-page
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "apps/app1/frontend/**"
+      - ".github/workflows/app1-frontend.yaml"
+      - ".github/workflows/build-image.yaml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  image:
+    permissions:
+      contents: write
+      packages: write
+    uses: ./.github/workflows/build-image.yaml
+    with:
+      name: second-page
+      context: apps/second-page
+      manifest: app-deployments/app1/frontend/deployment.yaml
+      
