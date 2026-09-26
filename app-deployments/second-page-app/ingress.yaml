@@ -3,13 +3,23 @@ kind: Ingress
 metadata:
   name: second-page-ingress
   namespace: second-page-app
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls: "true"
+    traefik.ingress.kubernetes.io/router.middlewares: >-
+      auth-oauth2-proxy-auth@kubernetescrd,
+      auth-oauth2-proxy-errors@kubernetescrd,
+      second-page-app-strip-second@kubernetescrd
 spec:
   ingressClassName: traefik
+  tls:
+    - hosts:
+        - xtemplate.tail9d78f5.ts.net
   rules:
-    - host: second.localhost
+    - host: xtemplate.tail9d78f5.ts.net
       http:
         paths:
-          - path: /
+          - path: /second
             pathType: Prefix
             backend:
               service:
