@@ -6,7 +6,8 @@ metadata:
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
     traefik.ingress.kubernetes.io/router.tls: "true"
-    # Intentionally no router.middlewares here — this is the one open path.
+    # Tell Traefik to drop down to HTTP when talking to your Nginx pod scheme
+    traefik.ingress.kubernetes.io/service.serversscheme: http
 spec:
   ingressClassName: traefik
   tls:
@@ -16,7 +17,6 @@ spec:
     - host: xtemplate.tail9d78f5.ts.net
       http:
         paths:
-          # 1. Matches ONLY the landing homepage root
           - path: /
             pathType: Exact
             backend:
@@ -24,7 +24,6 @@ spec:
                 name: landing-svc
                 port:
                   name: http
-          # 2. Matches and allows Vite compiled bundles (JS, CSS, images)
           - path: /assets
             pathType: Prefix
             backend:
