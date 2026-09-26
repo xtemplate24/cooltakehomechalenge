@@ -1,4 +1,4 @@
-name: bootstrap-lockfile
+name: create-lockfile
 
 on:
   workflow_dispatch:
@@ -22,7 +22,7 @@ jobs:
           ref: main
 
       - name: Set up Node
-        uses: actions/setup-node@1a4442cacd436585916779262731d5b162bc6ec7 # v4
+        uses: actions/setup-node@1a4442cacd436585916779262731d5b162bc6ec # v4
         with:
           node-version: 20
 
@@ -35,14 +35,17 @@ jobs:
         run: |
           set -euo pipefail
 
-          if git diff --quiet -- package-lock.json; then
+          git add package-lock.json
+
+          # Check the staged diff, not the working-tree diff — a brand-new
+          # file has nothing to show in `git diff` until it's staged.
+          if git diff --cached --quiet -- package-lock.json; then
             echo "No changes to package-lock.json — nothing to commit"
             exit 0
           fi
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add package-lock.json
           git commit -m "chore: generate lockfile for ${{ inputs.app_path }}"
           git pull --rebase origin main
           git push origin HEAD:main
